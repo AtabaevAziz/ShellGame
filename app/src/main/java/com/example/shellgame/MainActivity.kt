@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun Games() {
-    val appMode = remember{ mutableStateOf(0) }
+    val appMode = remember { mutableStateOf(0) }
+    val choice = arrayOf("Пусто", "Шарик")
     Scaffold(topBar = { TopAppBar(title = { Text(text = "Shell Game") }) }) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,7 +41,10 @@ fun Games() {
                 .fillMaxWidth()
         ) {
             val winOrFail = remember { mutableStateOf("") }
-            if (appMode.value > -1 ) {
+            val firstRandomChoice = remember { mutableStateOf("") }
+            val secondChoice = remember { mutableStateOf("") }
+            val thirdChoice = remember { mutableStateOf("") }
+            if (appMode.value > -1) {
 
                 val textMissionPhase = when (appMode.value % 2) {
                     1 -> winOrFail.value
@@ -65,99 +69,105 @@ fun Games() {
                         )
                     }
                 }
-            }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-            ) {
-                val choice = arrayOf("Пусто", "Шарик")
-                val firstRandomChoice = choice.random()
-                val secondChoice = if (firstRandomChoice == "Шарик") {
-                    "Пусто"
-                } else {
-                    choice.random()
-                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                ) {
+                    if (appMode.value > -1) {
+                        if (appMode.value % 2 == 0) {
+                            firstRandomChoice.value = choice.random()
+                        }
+                        val ballOrEmpty = when (appMode.value % 2) {
+                            1 -> firstRandomChoice.value
+                            else -> "----"
+                        }
+                        Button(
+                            onClick = {
+                                winOrFail.value = if (firstRandomChoice.value == "Шарик") {
+                                    "Выиграл"
+                                } else {
+                                    "Проиграл!"
+                                }
+                                appMode.value++
 
-                val thirdChoice = if (firstRandomChoice == "Пусто" && secondChoice == "Пусто") {
-                    "Шарик"
-                } else {
-                    "Пусто"
-                }
+                            },
+                            Modifier.padding(15.dp)
 
-
-                if (appMode.value > -1) {
-                    val ballOrEmpty = when (appMode.value % 2) {
-                        1 -> firstRandomChoice
-                        else -> "----"
+                        ) {
+                            Text(
+                                text = ballOrEmpty
+                            )
+                        }
                     }
-                    Button(
-                        onClick = {
-                            winOrFail.value = if (firstRandomChoice == "Шарик") {
-                                "Выиграл"
+                    if (appMode.value > -1) {
+                        if (appMode.value % 2 == 0) {
+                            secondChoice.value = if (firstRandomChoice.value == "Шарик") {
+                                "Пусто"
                             } else {
-                                "Проиграл!"
+                                choice.random()
                             }
-                            appMode.value++
 
-                        },
-                        Modifier.padding(15.dp)
+                        }
+                        val ballOrEmpty = when (appMode.value % 2) {
+                            1 -> secondChoice.value
+                            else -> "----"
+                        }
+                        Button(
+                            onClick = {
+                                winOrFail.value = if (secondChoice.value == "Шарик") {
+                                    "Выиграл"
+                                } else {
+                                    "Проиграл!"
+                                }
+                                appMode.value++
 
-                    ) {
-                        Text(
-                            text = ballOrEmpty
-                        )
+                            },
+                            Modifier.padding(15.dp)
+
+                        ) {
+                            Text(
+                                text = ballOrEmpty
+                            )
+                        }
                     }
-                }
-                if (appMode.value > -1) {
-                    val ballOrEmpty = when (appMode.value % 2) {
-                        1 -> secondChoice
-                        else -> "----"
-                    }
-                    Button(
-                        onClick = {
-                            winOrFail.value = if (secondChoice == "Шарик") {
-                                "Выиграл"
-                            } else {
-                                "Проиграл!"
-                            }
-                            appMode.value++
+                    if (appMode.value > -1) {
+                        if (appMode.value % 2 == 0) {
 
-                        },
-                        Modifier.padding(15.dp)
+                            thirdChoice.value =
+                                if (firstRandomChoice.value == "Пусто" && secondChoice.value == "Пусто") {
+                                    "Шарик"
+                                } else {
+                                    "Пусто"
+                                }
+                        }
+                        val ballOrEmpty = when (appMode.value % 2) {
+                            1 -> thirdChoice.value
+                            else -> "----"
+                        }
+                        Button(
+                            onClick = {
+                                winOrFail.value = if (thirdChoice.value == "Шарик") {
+                                    "Выиграл"
+                                } else {
+                                    "Проиграл!"
+                                }
+                                appMode.value++
 
-                    ) {
-                        Text(
-                            text = ballOrEmpty
-                        )
-                    }
-                }
-                if (appMode.value > -1) {
-                    val ballOrEmpty = when (appMode.value % 2) {
-                        1 -> thirdChoice
-                        else -> "----"
-                    }
-                    Button(
-                        onClick = {
-                            winOrFail.value = if (thirdChoice == "Шарик") {
-                                "Выиграл"
-                            } else {
-                                "Проиграл!"
-                            }
-                            appMode.value++
-
-                        },
-                        Modifier.padding(15.dp)
-                    ) {
-                        Text(
-                            text = ballOrEmpty
-                        )
+                            },
+                            Modifier.padding(15.dp)
+                        ) {
+                            Text(
+                                text = ballOrEmpty
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 
 @Preview
